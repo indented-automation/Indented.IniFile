@@ -54,10 +54,17 @@ Remove-IniFileItem -Name somename -Path somefile.ini
 
 Remove somename from all sections in somefile.ini.
 
+### EXAMPLE 3
+```
+Remove-IniFileItem -Name extension -Value imap -Section PHP
+```
+
+Remove extension, when the value is imap, from the section PHP.
+
 ## PARAMETERS
 
 ### -InputObject
-{{Fill InputObject Description}}
+{{ Fill InputObject Description }}
 
 ```yaml
 Type: PSObject
@@ -181,8 +188,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
@@ -190,7 +196,5 @@ For more information, see about_CommonParameters (http://go.microsoft.com/fwlink
 
 ### System.Void
 ## NOTES
-Change log:
-    30/01/2017 - Chris Dent - Created.
 
 ## RELATED LINKS

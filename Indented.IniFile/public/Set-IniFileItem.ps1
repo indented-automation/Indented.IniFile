@@ -1,8 +1,28 @@
 using namespace System.Text
 
 function Set-IniFileItem {
+    <#
+    .SYNOPSIS
+        Set the value of an item in an INI file.
+    .DESCRIPTION
+        Set the value of an item in an INI file.
+
+        Set-IniFileItem allows
+    .EXAMPLE
+        Set-IniFileItem -Name itemName -NewValue someValue -Path config.ini
+
+        Set a value for itemName in config.ini.
+    .EXAMPLE
+        Set-IniFileItem -Name itemName -Value currentValue -NewValue newValue -Path config.ini
+
+        Set a new value for itemName with value currentValue.
+    .EXAMPLE
+        Set-IniFileItem -Name extension -Value ldap -NewValue ldap -Path php.ini
+
+        Set a value for extension to LDAP. Other extension items in the file are ignored because of the Value filter.
+    #>
+
     [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'DefaultSearch')]
-    [OutputType([Void])]
     param (
         # The name of an item to add or edit.
         #

@@ -15,9 +15,10 @@ function Remove-IniFileItem {
         Remove-IniFileItem -Name somename -Path somefile.ini
 
         Remove somename from all sections in somefile.ini.
-    .NOTES
-        Change log:
-            30/01/2017 - Chris Dent - Created.
+    .EXAMPLE
+        Remove-IniFileItem -Name extension -Value imap -Section PHP
+
+        Remove extension, when the value is imap, from the section PHP.
     #>
 
     [CmdletBinding(SupportsShouldProcess, DefaultParameterSetName = 'DefaultSearch')]

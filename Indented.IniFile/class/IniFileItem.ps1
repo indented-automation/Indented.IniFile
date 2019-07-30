@@ -15,7 +15,7 @@ class IniFileItem {
     [DscProperty()]
     [String]$NewValue
 
-    [DscProperty(Mandatory)]
+    [DscProperty(Key)]
     [String]$Path
 
     Hidden [Void] InitializeRequest() {

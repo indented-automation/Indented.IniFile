@@ -17,10 +17,15 @@ function GetEol {
     )
 
     try {
-        $Path = $pscmdlet.GetUnresolvedProviderPathFromPSPath($Path)
-        $streamReader = [StreamReader][File]::OpenRead($Path)
         $eol = [Environment]::NewLine
 
+        $Path = $pscmdlet.GetUnresolvedProviderPathFromPSPath($Path)
+
+        if (-not (Test-Path $Path)) {
+            return $eol
+        }
+
+        $streamReader = [StreamReader][File]::OpenRead($Path)
         [Char[]]$buffer = [Char[]]::new(100)
         while (-not $streamReader.EndOfStream) {
             $null = $streamReader.Read($buffer, 0, 100)

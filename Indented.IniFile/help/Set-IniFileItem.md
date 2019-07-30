@@ -8,7 +8,7 @@ schema: 2.0.0
 # Set-IniFileItem
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Set the value of an item in an INI file.
 
 ## SYNTAX
 
@@ -34,129 +34,41 @@ Set-IniFileItem [-Name] <String> [-Section <String>] -LiteralValue <String> [-Ne
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Set the value of an item in an INI file.
+
+Set-IniFileItem allows
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
+```
+Set-IniFileItem -Name itemName -NewValue someValue -Path config.ini
 ```
 
-{{ Add example description here }}
+Set a value for itemName in config.ini.
+
+### EXAMPLE 2
+```
+Set-IniFileItem -Name itemName -Value currentValue -NewValue newValue -Path config.ini
+```
+
+Set a new value for itemName with value currentValue.
+
+### EXAMPLE 3
+```
+Set-IniFileItem -Name extension -Value ldap -NewValue ldap -Path php.ini
+```
+
+Set a value for extension to LDAP.
+Other extension items in the file are ignored because of the Value filter.
 
 ## PARAMETERS
 
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Encoding
-{{Fill Encoding Description}}
-
-```yaml
-Type: Encoding
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -EndOfLine
-{{Fill EndOfLine Description}}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-Accepted values: 
-, 
-
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ExpandEnvironmentVariables
-{{Fill ExpandEnvironmentVariables Description}}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -IncludePadding
-{{Fill IncludePadding Description}}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -LiteralValue
-{{Fill LiteralValue Description}}
-
-```yaml
-Type: String
-Parameter Sets: SearchUsingLiteralValue
-Aliases:
-
-Required: True
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -Name
-{{Fill Name Description}}
+The name of an item to add or edit.
 
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: True (ByPropertyName)
-Accept wildcard characters: False
-```
-
-### -NewValue
-{{Fill NewValue Description}}
+If the item does not exist it will be created.
+Section is mandatory for new items.
 
 ```yaml
 Type: String
@@ -166,27 +78,15 @@ Aliases:
 Required: True
 Position: 2
 Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Path
-{{Fill Path Description}}
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases: FullName
-
-Required: True
-Position: Named
-Default value: None
 Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
 ### -Section
-{{Fill Section Description}}
+The name of a section to add the item to.
+If the section does not exist it will be created.
+
+Section must be defined when adding a new value.
 
 ```yaml
 Type: String
@@ -201,7 +101,8 @@ Accept wildcard characters: False
 ```
 
 ### -Value
-{{Fill Value Description}}
+The value may be defined to describe the item.
+Wildcards are supported.
 
 ```yaml
 Type: String
@@ -211,6 +112,115 @@ Aliases:
 Required: True
 Position: Named
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -LiteralValue
+The literal value may be defined to absolutely describe the item.
+Wildcards are not supported.
+
+```yaml
+Type: String
+Parameter Sets: SearchUsingLiteralValue
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NewValue
+The value of the item.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 3
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Path
+The path to an ini file.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases: FullName
+
+Required: True
+Position: Named
+Default value: None
+Accept pipeline input: True (ByPropertyName)
+Accept wildcard characters: False
+```
+
+### -ExpandEnvironmentVariables
+Request expansion of environment variables within the value.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -IncludePadding
+Add spaces around the = symbol.
+For example, sets "Name = Value" instead of "Name=Value".
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Encoding
+If the INI file already exists the files current encoding will be used.
+If not, an encoding may be specified using this parameter.
+By default, files are saved using UTF8 encoding with no BOM.
+
+```yaml
+Type: Encoding
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: [System.Text.UTF8Encoding]::new($false)
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EndOfLine
+The default end of line character used when creating new files.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: [Environment]::NewLine
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -231,17 +241,27 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: cf
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
-### System.String
-
 ## OUTPUTS
-
-### System.Void
 
 ## NOTES
 
