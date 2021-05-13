@@ -15,22 +15,22 @@ Set the value of an item in an INI file.
 ### DefaultSearch (Default)
 ```
 Set-IniFileItem [-Name] <String> [-Section <String>] [-NewValue] <String> -Path <String>
- [-ExpandEnvironmentVariables] [-IncludePadding] [-Encoding <Encoding>] [-EndOfLine <String>] [-WhatIf]
- [-Confirm] [<CommonParameters>]
+ [-ExpandEnvironmentVariables] [-IncludePadding] [-NameOnly] [-Encoding <Encoding>] [-EndOfLine <String>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### SearchUsingValue
 ```
 Set-IniFileItem [-Name] <String> [-Section <String>] -Value <String> [-NewValue] <String> -Path <String>
- [-ExpandEnvironmentVariables] [-IncludePadding] [-Encoding <Encoding>] [-EndOfLine <String>] [-WhatIf]
- [-Confirm] [<CommonParameters>]
+ [-ExpandEnvironmentVariables] [-IncludePadding] [-NameOnly] [-Encoding <Encoding>] [-EndOfLine <String>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### SearchUsingLiteralValue
 ```
 Set-IniFileItem [-Name] <String> [-Section <String>] -LiteralValue <String> [-NewValue] <String> -Path <String>
- [-ExpandEnvironmentVariables] [-IncludePadding] [-Encoding <Encoding>] [-EndOfLine <String>] [-WhatIf]
- [-Confirm] [<CommonParameters>]
+ [-ExpandEnvironmentVariables] [-IncludePadding] [-NameOnly] [-Encoding <Encoding>] [-EndOfLine <String>]
+ [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -180,6 +180,21 @@ Accept wildcard characters: False
 ### -IncludePadding
 Add spaces around the = symbol.
 For example, sets "Name = Value" instead of "Name=Value".
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NameOnly
+When writing the name only, exclude the equals symbol which normally separates the name and value.
 
 ```yaml
 Type: SwitchParameter
