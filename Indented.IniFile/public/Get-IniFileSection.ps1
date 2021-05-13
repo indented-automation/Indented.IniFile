@@ -4,14 +4,17 @@ function Get-IniFileSection {
     <#
     .SYNOPSIS
         Get a section from an Ini file.
+
     .DESCRIPTION
         Reads an Ini file, returning matching sections.
 
         The ini file sections returned by this function includes an Extent property which describes the location of a section within the file.
+
     .EXAMPLE
         Get-IniFileItem -Path somefile.ini
 
         Get all sections in somefile.ini.
+
     .EXAMPLE
         Get-IniFileSection -Name somesection -Path somefile.ini
 
@@ -19,15 +22,15 @@ function Get-IniFileSection {
     #>
 
     [CmdletBinding()]
-    [OutputType([System.Management.Automation.PSObject])]
+    [OutputType('IniFileSection')]
     param (
         # The name of the field to retrieve. The Name parameter supports wildcards. By default, all fields are returned.
-        [String]$Name = '*',
+        [string]$Name = '*',
 
         # The path to an ini file.
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [Alias('FullName')]
-        [String]$Path
+        [string]$Path
     )
 
     process {

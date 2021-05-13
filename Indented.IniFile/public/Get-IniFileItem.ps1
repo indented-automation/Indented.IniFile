@@ -4,18 +4,22 @@ function Get-IniFileItem {
     <#
     .SYNOPSIS
         Get an item from an Ini file.
+
     .DESCRIPTION
         Reads an Ini file, returning matching items.
 
         The ini file items returned by this function include an Extent property which describes the location of an item within the file.
+
     .EXAMPLE
         Get-IniFileItem -Path somefile.ini
 
         Get all items in somefile.ini.
+
     .EXAMPLE
         Get-IniFileItem -Section somesection -Path somefile.ini
 
         Get all items within the second "somesection" from somefile.ini.
+
     .EXAMPLE
         Get-IniFileItem -Name somename -Path somefile.ini
 
@@ -23,11 +27,11 @@ function Get-IniFileItem {
     #>
 
     [CmdletBinding(DefaultParameterSetName = 'DefaultSearch')]
-    [OutputType([System.Management.Automation.PSObject])]
+    [OutputType('IniFileItem')]
     param (
         # The name of the field to retrieve. The Name parameter supports wildcards. By default, all fields are returned.
         [Parameter(Position = 1)]
-        [String]$Name = '*',
+        [string]$Name = '*',
 
         # The section a setting resides within. The Section parameter supports wildcrds. By default, all sections are returned.
         [Parameter(Position = 2)]
@@ -36,15 +40,15 @@ function Get-IniFileItem {
         # The path to an ini file.
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [Alias('FullName')]
-        [String]$Path,
+        [string]$Path,
 
         # The value may be defined to describe the item. Wildcards are supported.
         [Parameter(Mandatory, ParameterSetName = 'SearchUsingValue')]
-        [String]$Value,
+        [string]$Value,
 
         # The literal value may be defined to absolutely describe the item. Wildcards are not supported.
         [Parameter(Mandatory, ParameterSetName = 'SearchUsingLiteralValue')]
-        [String]$LiteralValue
+        [string]$LiteralValue
     )
 
     process {
@@ -67,18 +71,19 @@ function Get-IniFileItem {
                         $SectionStart = $position - $_.Length
                         break
                     }
-                    '^([^=]+?) *= *(.*)$' {
+                    '^([^=]+?)(?: *= *(.*))?$' {
                         [PSCustomObject]@{
                             Name       = $matches[1]
                             Value      = $matches[2]
                             Section    = $SectionName
                             Extent     = [PSCustomObject]@{
-                                SectionStart = $SectionStart
-                                ItemStart    = $position - $_.Length
-                                ItemEnd      = $position
-                                ItemLength   = $_.Length
-                                ValueStart   = $position - $matches[2].Length
-                                ValueLength  = $matches[2].Length
+                                SectionStart    = $SectionStart
+                                ItemStart       = $position - $_.Length
+                                ItemEnd         = $position
+                                ItemLength      = $_.Length
+                                ValueStart      = $position - $matches[2].Length
+                                ValueLength     = $matches[2].Length
+                                IsAssignedValue = [bool]$matches[2]
                             }
                             Path       = $Path
                             PSTypeName = 'IniFileItem'

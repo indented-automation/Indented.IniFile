@@ -4,18 +4,22 @@ function Set-IniFileItem {
     <#
     .SYNOPSIS
         Set the value of an item in an INI file.
+
     .DESCRIPTION
         Set the value of an item in an INI file.
 
         Set-IniFileItem allows
+
     .EXAMPLE
         Set-IniFileItem -Name itemName -NewValue someValue -Path config.ini
 
         Set a value for itemName in config.ini.
+
     .EXAMPLE
         Set-IniFileItem -Name itemName -Value currentValue -NewValue newValue -Path config.ini
 
         Set a new value for itemName with value currentValue.
+
     .EXAMPLE
         Set-IniFileItem -Name extension -Value ldap -NewValue ldap -Path php.ini
 
@@ -46,6 +50,7 @@ function Set-IniFileItem {
 
         # The value of the item.
         [Parameter(Mandatory, Position = 2)]
+        [AllowEmptyString()]
         [String]$NewValue,
 
         # The path to an ini file.
@@ -58,6 +63,9 @@ function Set-IniFileItem {
 
         # Add spaces around the = symbol. For example, sets "Name = Value" instead of "Name=Value".
         [Switch]$IncludePadding,
+
+        # When writing the name only, exclude the equals symbol which normally separates the name and value.
+        [Switch]$NameOnly,
 
         # If the INI file already exists the files current encoding will be used. If not, an encoding may be specified using this parameter. By default, files are saved using UTF8 encoding with no BOM.
         [Encoding]$Encoding = [System.Text.UTF8Encoding]::new($false),
@@ -78,7 +86,11 @@ function Set-IniFileItem {
             $null = $psboundparameters.Remove('ExpandEnvironmentVariables')
             $NewValue = [Environment]::ExpandEnvironmentVariables($NewValue)
         }
-        $newItem = '{0}{2}={2}{1}' -f $Name, $NewValue, @('', ' ')[$IncludePadding.ToBool()]
+        if ($NameOnly) {
+            $newItem = $Name
+        } else {
+            $newItem = '{0}{2}={2}{1}' -f $Name, $NewValue, @('', ' ')[$IncludePadding.ToBool()]
+        }
 
         if (Test-Path $Path) {
             $eolParam['EndOfLine'] = GetEol -Path $Path
@@ -91,6 +103,7 @@ function Set-IniFileItem {
             $null = $psboundparameters.Remove('NewValue')
             $null = $psboundparameters.Remove('ExpandEnvironmentVariables')
             $null = $psboundparameters.Remove('IncludePadding')
+            $null = $psboundparameters.Remove('NameOnly')
             $null = $psboundparameters.Remove('Encoding')
             $null = $psboundparameters.Remove('EndOfLine')
 
@@ -100,8 +113,20 @@ function Set-IniFileItem {
 
                 foreach ($existingItem in $existingItems) {
                     if ($existingItem.Value -ne $NewValue) {
-                        $content = $content.Remove($existingItem.Extent.ValueStart, $existingItem.Extent.ValueLength).
-                                            Insert($existingItem.Extent.ValueStart, $NewValue)
+                        if (-not $existingItem.Extent.IsAssignedValue -and $NewValue) {
+                            $NewValue = '={1}{0}' -f $NewValue, @('', ' ')[$IncludePadding.ToBool()]
+                        } elseif ($NameOnly -and $existingItem.Extent.IsAssignedValue -and -not $NewValue) {
+                            $existingItem.Extent.ValueStart--
+                            $existingItem.Extent.ValueLength++
+                        }
+
+                        $content = $content.Remove(
+                            $existingItem.Extent.ValueStart,
+                            $existingItem.Extent.ValueLength
+                        ).Insert(
+                            $existingItem.Extent.ValueStart,
+                            $NewValue
+                        )
                     }
                 }
             } else {
@@ -132,7 +157,7 @@ function Set-IniFileItem {
         }
 
         if ($pscmdlet.ShouldProcess(('Updating file {0}, {1} with value {2}' -f $Path, $Name, $NewValue))) {
-            [File]::WriteAllLines(
+            [File]::WriteAllText(
                 $Path,
                 $content,
                 $encoding

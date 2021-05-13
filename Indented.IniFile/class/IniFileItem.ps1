@@ -4,27 +4,27 @@ class IniFileItem {
     [Ensure]$Ensure = 'Present'
 
     [DscProperty(Key)]
-    [String]$Name
+    [string]$Name
 
     [DscProperty()]
-    [String]$Section
+    [string]$Section
 
     [DscProperty()]
-    [String]$Value
+    [string]$Value
 
     [DscProperty()]
-    [String]$NewValue
+    [string]$NewValue
 
     [DscProperty(Key)]
-    [String]$Path
+    [string]$Path
 
-    Hidden [Void] InitializeRequest() {
+    hidden [Void] InitializeRequest() {
         if (-not (Test-Path $this.Path)) {
             throw 'The INI file, {0}, does not exist' -f $this.Path
         }
     }
 
-    Hidden [Hashtable] GetParams() {
+    hidden [Hashtable] GetParams() {
         $params = @{
             Name = $this.Name
             Path = $this.Path

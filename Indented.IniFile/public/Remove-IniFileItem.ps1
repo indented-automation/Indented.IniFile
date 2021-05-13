@@ -5,16 +5,20 @@ function Remove-IniFileItem {
     <#
     .SYNOPSIS
         Get an item from an Ini file.
+
     .DESCRIPTION
         Reads an Ini file, returning matching items.
+
     .EXAMPLE
         Remove-IniFileItem -Name somename -Section somesection -Path somefile.ini
 
         Remove somename from the somesection section in somefile.ini.
+
     .EXAMPLE
         Remove-IniFileItem -Name somename -Path somefile.ini
 
         Remove somename from all sections in somefile.ini.
+
     .EXAMPLE
         Remove-IniFileItem -Name extension -Value imap -Section PHP
 
@@ -63,7 +67,7 @@ function Remove-IniFileItem {
             $iniFileItems = [List[PSObject]]::new()
         } else {
             Get-IniFileItem @psboundparameters | Remove-IniFileItem
-         }
+        }
     }
 
     process {
@@ -86,18 +90,16 @@ function Remove-IniFileItem {
 
                 $items = $group.Group | Sort-Object { $_.Extent.ItemStart } -Descending
                 foreach ($item in $items) {
-                    if ($item.Value -ne $Value) {
-                        if ($item.Length -gt $item.Extent.ItemStart + $item.Extent.ItemLength + $eolLength) {
-                            $itemLength = $item.Extent.ItemLength + $eolLength
-                        } else {
-                            $itemLength = $item.Extent.ItemLength
-                        }
-                        $content = $content.Remove($item.Extent.ItemStart, $itemLength)
+                    if ($content.Length -gt $item.Extent.ItemStart + $item.Extent.ItemLength + $eolLength) {
+                        $itemLength = $item.Extent.ItemLength + $eolLength
+                    } else {
+                        $itemLength = $item.Extent.ItemLength
                     }
+                    $content = $content.Remove($item.Extent.ItemStart, $itemLength)
                 }
 
                 if ($pscmdlet.ShouldProcess(('Updating INI file {0}' -f $iniFilePath))) {
-                    [File]::WriteAllLines(
+                    [File]::WriteAllText(
                         $iniFilePath,
                         $content,
                         $encoding
